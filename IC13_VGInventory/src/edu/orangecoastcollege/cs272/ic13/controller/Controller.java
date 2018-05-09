@@ -98,7 +98,7 @@ public class Controller {
 		// At least one special character (@, #, $, %, !)
 		// At least one upper case letter
 		// At least 8 characters long, but no more than 16
-		return password.matches("((?=.*[a-z])(?=.*d)(?=.*[@#$%!])(?=.*[A-Z]).{8,16})");
+	    return password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\\\|,.<>\\/?]).{8,16}$");
 	}
 
 	public boolean isValidEmail(String email)
