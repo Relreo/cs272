@@ -170,12 +170,55 @@ public class Controller {
 	public ObservableList<VideoGame> getGamesForCurrentUser()
 	{
 		ObservableList<VideoGame> userGamesList = FXCollections.observableArrayList();
-		//TODO: Implement this method
+		try
+        {
+            ArrayList<ArrayList<String>> resultsList = theOne.mUserGamesDB.getRecord(Integer.toString(theOne.mCurrentUser.getId()));
+            // Loop through the results
+            int gameId;
+            for (ArrayList<String> values : resultsList)
+            {
+                gameId = Integer.parseInt(values.get(1));
+                // Loop through all the games, and try to find a match
+                for (VideoGame vg : theOne.mAllGamesList)
+                {
+                    if (gameId == vg.getId())
+                    {
+                        userGamesList.add(vg);
+                        break;
+                    }
+                }
+            }
+
+            return userGamesList;
+        }
+        catch (SQLException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
 		return userGamesList;
 	}
 
 	public boolean addGameToUsersInventory(VideoGame selectedGame)  {
 		//TODO: Implement this method
+	    // Create an ObservableList<VideoGame> assigned to the list returned from getGamesForCurrentUser
+	    ObservableList<VideoGame> gamesOwnedByCurrentUser = getGamesForCurrentUser();
+
+	    if(gamesOwnedByCurrentUser.contains(selectedGame))
+	        return false;
+
+	    String[] values = {(String.valueOf(theOne.mCurrentUser.getId())), String.valueOf(selectedGame.getId())};
+
+	    try
+        {
+            theOne.mUserGamesDB.createRecord(USER_GAMES_FIELD_NAMES, values);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
 		return true;
 	}
 
